@@ -13,6 +13,6 @@ namespace ShoppingList.Database {
             optionsBuilder.UseSqlite(config.GetConnectionString("ShoppingListDatabase"));
         }
 
-        public DbSet<ShoppingList> ShoppingListItems { get; set; }
+        public DbSet<ShoppingItem> ShoppingListItems { get; set; }
     }
 }

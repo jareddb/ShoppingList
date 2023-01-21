@@ -1,10 +1,11 @@
-﻿namespace ShoppingList.Database {
-    public class ShoppingList {
+﻿
+
+namespace ShoppingList.Database {
+    public class ShoppingItem {
         public int Id { get; set; }
         public string? Username { get; set; }
-        public bool Complete { get; set; }
+        public DateTime DateAdded { get; set; }
         public string? Description { get; set; }
-        public bool Deleted { get; set; }
 
     }
 }
