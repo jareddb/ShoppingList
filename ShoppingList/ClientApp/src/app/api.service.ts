@@ -13,16 +13,20 @@ export class ApiService {
     this.baseUrl = baseUrl;
   }
 
-  public deleteRecord() {
-    return this.http.get(this.baseUrl + 'app/v1/DeleteRecord')
+  public deleteRecord(id: any ) {
+    return this.http.delete(this.baseUrl + 'app/v1/DeleteRecord/' + id)
   }
 
   public addRecord() {
     return this.http.get(this.baseUrl + 'app/v1/AddRecord')
   }
 
-  public getUserRecords(username: string) {
-    return this.http.get(this.baseUrl + 'app/v1/GetUserRecords/{username}')
+  public upsertRecord(item:any) {
+    return this.http.post(this.baseUrl + 'app/v1/UpsertRecord', item)
+  }
+
+  public getAllRecords() {
+    return this.http.get(this.baseUrl + 'app/v1/GetAllRecords')
   }
 
   public saveAllChanges() {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
     
 namespace ShoppingList.Database {
-    public class ShoppingListContext : DbContext {
+    public class ShoppingListDbContext : DbContext {
 
         private IConfiguration config;
 
-        public ShoppingListContext(IConfiguration config) {
+        public ShoppingListDbContext(IConfiguration config) {
             this.config = config;
         }
 
@@ -13,6 +13,6 @@ namespace ShoppingList.Database {
             optionsBuilder.UseSqlite(config.GetConnectionString("ShoppingListDatabase"));
         }
 
-        public DbSet<ShoppingItem> ShoppingListItems { get; set; }
+        public DbSet<ShoppingListItem> ShoppingListItem { get; set; }
     }
 }

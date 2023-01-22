@@ -3,30 +3,36 @@ using ShoppingList.Database;
 
 namespace ShoppingList.Controllers {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/v1")]
     public class AppController : ControllerBase {
 
-        private readonly ILogger<AppController> _logger;
+        private ShoppingItemData _shoppingItemData;
 
-        public AppController(ILogger<AppController> logger) {
-            _logger = logger;
+        public AppController(ShoppingItemData shoppingItemData) {
+            _shoppingItemData = shoppingItemData;
         }
 
         [HttpDelete("DeleteRecord/{id}")]
         public async Task<ActionResult> DeleteRecord(int id) {
-            bool result = true;
+            int result = _shoppingItemData.DeleteRecord(id);
             return Ok(new { data = result });
         }
 
         [HttpGet("AddRecord")]
-        public async Task<ActionResult> AddRecord(ShoppingItem shoppingListItem) {
-            bool result = true;
+        public async Task<ActionResult> AddRecord() {
+            var result = _shoppingItemData.AddBlankRecord();
             return Ok(new { data = result });
         }
 
-        [HttpGet("GetUserRecords/{username}")]
-        public async Task<ActionResult> GetUserRecords(string username) {
-            bool result = true;
+        [HttpPost("UpsertRecord")]
+        public async Task<ActionResult> UpsertRecord([FromBody] ShoppingListItem item) {
+            var result = _shoppingItemData.UpsertRecord(item);
+            return Ok(new { data = result });
+        }
+
+        [HttpGet("GetAllRecords")]
+        public async Task<ActionResult> GetAllRecords() {
+            var result = _shoppingItemData.GetAllRecords();
             return Ok(new { data = result });
         }
 

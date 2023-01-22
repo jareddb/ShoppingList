@@ -1,6 +1,6 @@
 
 <!--Modal-->
-<ng-template #mymodal let-modal>
+<!--<ng-template #mymodal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -13,23 +13,23 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
   </div>
-</ng-template>
+</ng-template>-->
 
        <!-- <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="SaveUser(usernameInput.value)">Save</button>-->
 
 
 <!--Shopping List-->
-<div *ngIf="!this.isLoading" style="margin-left:calc(40vw - 75px);"><img src="assets/loadingIcon.gif" /></div>
-<div *ngIf="this.isLoading" style="margin-left:auto;margin-right:auto;max-width:700px;">
-  <h5>User's Shopping List:</h5>
-  <ag-grid-angular class="ag-theme-alpine"
+<div *ngIf="!this.isLoading" style="margin-left:auto;margin-right:auto;max-width:700px;">
+  <button type="button" class="btn btn-outline-primary btn-sm" (click)="AddRow()" style="margin-left:50px;margin-bottom:5px; font-size:125%; padding-top:0px; padding-bottom:2px;"><b>+</b></button>
+  <ag-grid-angular class="ag-theme-alpine" style="height: calc(100vh - 125px);"
                    [columnDefs]=this.columnDefs
                    [rowData]=this.rowData
                    [rowDragManaged]="true"
                    [gridOptions]="gridOptions"
                    [frameworkComponents]="frameworkComponents"
-                   (gridReady)="onGridReady($event)">
+                   (gridReady)="onGridReady($event)"
+                   (cellValueChanged)="onCellValueChanged($event)">
 
   </ag-grid-angular>
-  <button type="button" class="btn btn-outline-primary btn-sm" (click)="AddRow()" style="margin-left:50px;margin-top:5px; font-size:125%; padding-top:0px; padding-bottom:2px;"><b>+</b></button>
 </div>
+<div *ngIf="this.isLoading" style="margin-left:calc(35vw - 100px);"><img src="assets/loadingIcon.gif" /></div>

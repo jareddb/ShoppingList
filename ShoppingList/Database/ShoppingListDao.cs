@@ -1,42 +1,64 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
+
 namespace ShoppingList.Database {
 
-    class ShoppingItemDao { 
+    public class ShoppingItemData { 
 
-        private ShoppingListContext dbContext;
+        private ShoppingListDbContext _dbContext;
+        private DbContextOptions<ShoppingListDbContext> _dbOptions;
 
-        public ShoppingItemDao(ShoppingListContext dbContext) { 
-            this.dbContext = dbContext;
+        public ShoppingItemData(ShoppingListDbContext dbContext, DbContextOptions<ShoppingListDbContext> dbOptions) { 
+            this._dbContext = dbContext;
+            this._dbOptions = dbOptions;
+
         }
 
-        public List<ShoppingItem> GetUserRecords(string username) {
-            return dbContext.ShoppingListItems.Where(i => i.Username == username).ToList();
+        public List<ShoppingListItem> GetAllRecords() {
+            var allItems = _dbContext.ShoppingListItem.Where(i => i.IsDeleted == false).ToList();
+            return allItems;
         }
 
-        public int AddRecord(ShoppingItem item) {
-            dbContext.ShoppingListItems.Add(item);
-            return dbContext.SaveChanges();
+        public ShoppingListItem AddBlankRecord() {
+            var newItem = new ShoppingListItem() { DateAdded = DateTime.Now, Description = String.Empty, IsDeleted = false};
+            _dbContext.ShoppingListItem.Add(newItem);
+            _dbContext.SaveChanges();
+            return newItem;
+        }
+
+        public ShoppingListItem UpsertRecord(ShoppingListItem item) {
+            var itemToUpdate = _dbContext.ShoppingListItem.SingleOrDefault(x => x.Id == item.Id);
+            if (itemToUpdate is null) {
+                item.Id = 0;
+                item.DateAdded = DateTime.Now;
+                item.IsDeleted = false;
+                itemToUpdate = _dbContext.ShoppingListItem.Add(item).Entity;
+            }else {
+                itemToUpdate.DateAdded = DateTime.Now;
+                itemToUpdate.Description = item.Description;
+            }
+            _dbContext.SaveChanges();
+            
+            return itemToUpdate;
         }
 
         public int DeleteRecord(int id) {
-            var itemToDelete = dbContext.ShoppingListItems.Find(id);
+            var itemToDelete = _dbContext.ShoppingListItem.Find(id);
             if (itemToDelete != null) {
-                dbContext.ShoppingListItems.Remove(itemToDelete);
-                return dbContext.SaveChanges();
+                itemToDelete.IsDeleted = true;
+                return _dbContext.SaveChanges();
             }
             return 0;
         }
 
-        public int BulkUpsertUserRecords(List<ShoppingItem> items) {
-            var username = items.First().Username is null ? String.Empty : items.First().Username;
-            var existingItems = dbContext.ShoppingListItems.Where(x => x.Username == username);
+        public int BulkUpsertRecords(List<ShoppingListItem> items) {
+            var existingItems = _dbContext.ShoppingListItem.ToList();
             var newItems = items.FindAll(x => !existingItems.Any(y => y.Id == x.Id)).ToList();
             var itemsToUpdate = items.FindAll(x => existingItems.Any(y => y.Id == x.Id));
-
-            dbContext.ShoppingListItems.AddRange(newItems);
-            dbContext.ShoppingListItems.UpdateRange(itemsToUpdate);
-            return dbContext.SaveChanges();
+            _dbContext.ShoppingListItem.AddRange(newItems);
+            _dbContext.ShoppingListItem.UpdateRange(itemsToUpdate);
+            return _dbContext.SaveChanges();
         }
 
 

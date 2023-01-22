@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AgGridAngular } from 'ag-grid-angular';
-import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
-import { ColDef, GridOptions, Grid, GridApi } from 'ag-grid-community';
+import { ColDef, GridOptions, Grid, GridApi, CellValueChangedEvent } from 'ag-grid-community';
 import { Observable } from 'rxjs';
 import { DeleteBtnRenderer } from '../shared/delete-button-renderer.component';
+import { ShoppingListItem } from '../models/shopping-list-item';
 
 @Component({
   selector: 'app-home',
@@ -14,39 +14,31 @@ import { DeleteBtnRenderer } from '../shared/delete-button-renderer.component';
 })
 export class HomeComponent implements OnInit {
 
-  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement> = {} as ElementRef;
-  @ViewChild('myModal', { static: true }) myModal: ElementRef = {} as ElementRef;
-
   public gridOptions: GridOptions = {};
   public api: GridApi;
   public frameworkComponents: any;
-  public rowData: any[] = [];
+  public rowData: ShoppingListItem[] = [];
   public columnDefs: ColDef[] = [];
   public isLoading: boolean = true;
-  public username: string = '';
 
   constructor(private http: HttpClient,
     private apiservice: ApiService,
-    private modalService: NgbModal,
   ) {
     this.frameworkComponents = { deleteBtnRenderer: DeleteBtnRenderer };
     this.api = new GridApi();
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.columnDefs = [
-      { field: 'Description' },
+      { field: 'description', initialWidth: 550 },
     ];
-    this.rowData = [
-      { Description: 'Milk' },
-      { Description: '' },
-      { Description: 'Banan' },
-    ]
-
-    this.apiservice.getUserRecords('Jared Brinton').subscribe(d => { console.log(d); })
-
+    this.apiservice.getAllRecords().subscribe((d:any) => {
+      console.log(d['data']);
+      this.rowData = d['data'];
+      this.isLoading = false;
+    })
     this.columnDefs.forEach((colDef, index) => { colDef.editable = true; })
-
     let deleteButton = {
       headerName: "",
       field: "record",
@@ -58,31 +50,36 @@ export class HomeComponent implements OnInit {
     }
     this.columnDefs.unshift(deleteButton);
     this.gridOptions.suppressNoRowsOverlay = false;
-    this.gridOptions.domLayout = 'autoHeight';
-
-    this.modalService.open(this.myModal).result.then(() => this.username = this.userInput.nativeElement.value);
+    this.gridOptions.suppressScrollOnNewData = true;
+    //this.gridOptions.domLayout = 'autoHeight';
   }
 
   onGridReady(params: any) {
     this.api = params.api;
   }
 
+  onCellValueChanged(event: CellValueChangedEvent) {
+    this.isLoading = true;
+    this.apiservice.upsertRecord(event.data).subscribe((d: any) => { this.isLoading = false; });
+  }
+
+  //Delete Button
   onBtnClick(params: any) {
-    console.log('Delete Button function');
+    this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    this.isLoading = true;
+    this.apiservice.deleteRecord(params.rowData['id']).subscribe(() => {
+      this.rowData.splice(this.rowData.findIndex(i => i.id == params.rowData['id']), 1);
+      this.api.setRowData(this.rowData);
+      console.log('this line reached');
+      this.isLoading = false;
+    });
   }
 
   AddRow() {
-    this.rowData.push({ Description: '' });
+    this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    this.rowData.unshift({ id: 0, description: '' });
     this.api.setRowData(this.rowData);
-  }
 
-  SaveUser(username: string) {
-    this.username = this.userInput.nativeElement.value;
-  }
-
-
-  DeleteRow() {
-    //this.apiService.DeleteItem();
   }
 
 }

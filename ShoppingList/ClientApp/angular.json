@@ -129,5 +129,7 @@
       }
     }
   },
-  "defaultProject": "ShoppingList"
+  "cli": {
+    "analytics": false
+  }
 }
