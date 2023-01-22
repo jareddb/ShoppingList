@@ -26,7 +26,7 @@ describe('Home Component', () => {
     expect(fixture.componentInstance.columnDefs[1].editable).toEqual(true);
   });
 
-  it('it should add a new row when addRow() is called', () => {
+  it('Should add a new row when addRow() is called', () => {
     let count = fixture.componentInstance.rowData.length;
     fixture.componentInstance.addRow();
     expect(fixture.componentInstance.rowData.length).toBeGreaterThan(count);
