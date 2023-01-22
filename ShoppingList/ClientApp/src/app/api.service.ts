@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http'
   providedIn: 'root'
 })
 
-export class ApiServicce {
+export class ApiService {
 
   private baseUrl!: string;
 
@@ -14,19 +14,19 @@ export class ApiServicce {
   }
 
   public deleteRecord() {
-    return this.http.get(this.baseUrl + 'api/v1/DeleteRecord')
+    return this.http.get(this.baseUrl + 'app/v1/DeleteRecord')
   }
 
   public addRecord() {
-    return this.http.get(this.baseUrl + 'api/v1/AddRecord')
+    return this.http.get(this.baseUrl + 'app/v1/AddRecord')
   }
 
-  public getUserRecords() {
-    return this.http.get(this.baseUrl + 'api/v1/GetUserRecords')
+  public getUserRecords(username: string) {
+    return this.http.get(this.baseUrl + 'app/v1/GetUserRecords/{username}')
   }
 
   public saveAllChanges() {
-    return this.http.get(this.baseUrl + 'api/v1/SaveChanges')
+    return this.http.get(this.baseUrl + 'app/v1/SaveChanges')
   }
 
 
