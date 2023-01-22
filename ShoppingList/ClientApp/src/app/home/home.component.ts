@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../api.service';
-import { ColDef, GridOptions, GridApi, CellValueChangedEvent } from 'ag-grid-community';
+import { ColDef, GridOptions, GridApi, CellValueChangedEvent, Logger } from 'ag-grid-community';
 import { DeleteBtnRenderer } from '../shared/delete-button-renderer.component';
 import { ShoppingListItem } from '../models/shopping-list-item';
 
@@ -20,8 +20,7 @@ export class HomeComponent implements OnInit {
   public columnDefs: ColDef[] = [];
   public isLoading: boolean = true;
 
-  constructor(private http: HttpClient,
-    private apiservice: ApiService,
+  constructor(private apiservice: ApiService,
   ) {
     this.frameworkComponents = { deleteBtnRenderer: DeleteBtnRenderer };
     this.api = new GridApi();
@@ -30,7 +29,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.columnDefs = [{ field: 'description', initialWidth: 550 },];
-    this.apiservice.getAllRecords().subscribe((d:any) => {
+    this.apiservice.getAllRecords().subscribe((d: any) => {
+      console.log(d['data']);
       this.rowData = d['data'];
       this.isLoading = false;
     })
@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
 
   onGridReady(params: any) {
     this.api = params.api;
+    console.log(this.api.getColumnDefs());
   }
 
   onCellValueChanged(event: CellValueChangedEvent) {
@@ -68,10 +69,10 @@ export class HomeComponent implements OnInit {
   }
 
   addRow() {
-    this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    try { this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    } catch { this.rowData = [] }
     this.rowData.unshift({ id: 0, description: '' });
     this.api.setRowData(this.rowData);
-
   }
 
 }
