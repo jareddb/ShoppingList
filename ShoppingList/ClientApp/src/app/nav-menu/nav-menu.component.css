@@ -1,17 +1,16 @@
-/*
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+
+#navbar {
+  background-color: #CCCCCC;
+  padding-bottom: 10px;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}*/
+#navbar-right {
+  margin-right: 25px;
+}
 
+#navbar-left {
+  margin-left: 25px;
+}
 
 .navbar-brand {
   position: absolute;

@@ -5,10 +5,9 @@ internal class Program {
     private static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         configurationBuilder.AddJsonFile("appsettings.json").Build();
+
         builder.Services.AddDbContext<ShoppingListDbContext>();
         builder.Services.AddTransient<ShoppingItemData>();
         builder.Services.AddTransient<AppController>();
@@ -19,9 +18,7 @@ internal class Program {
         var loggerFactory = app.Services.GetService<ILoggerFactory>();
         loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
 
-        // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 

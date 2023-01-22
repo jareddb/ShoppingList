@@ -18,12 +18,6 @@ namespace ShoppingList.Controllers {
             return Ok(new { data = result });
         }
 
-        [HttpGet("AddRecord")]
-        public async Task<ActionResult> AddRecord() {
-            var result = _shoppingItemData.AddBlankRecord();
-            return Ok(new { data = result });
-        }
-
         [HttpPost("UpsertRecord")]
         public async Task<ActionResult> UpsertRecord([FromBody] ShoppingListItem item) {
             var result = _shoppingItemData.UpsertRecord(item);
@@ -35,11 +29,6 @@ namespace ShoppingList.Controllers {
             var result = _shoppingItemData.GetAllRecords();
             return Ok(new { data = result });
         }
-
-
-
-
-
 
     }
 }

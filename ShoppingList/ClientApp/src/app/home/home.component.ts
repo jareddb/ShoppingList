@@ -1,9 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AgGridAngular } from 'ag-grid-angular';
 import { ApiService } from '../api.service';
-import { ColDef, GridOptions, Grid, GridApi, CellValueChangedEvent } from 'ag-grid-community';
-import { Observable } from 'rxjs';
+import { ColDef, GridOptions, GridApi, CellValueChangedEvent } from 'ag-grid-community';
 import { DeleteBtnRenderer } from '../shared/delete-button-renderer.component';
 import { ShoppingListItem } from '../models/shopping-list-item';
 
@@ -12,6 +10,7 @@ import { ShoppingListItem } from '../models/shopping-list-item';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
 
   public gridOptions: GridOptions = {};
@@ -30,11 +29,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.columnDefs = [
-      { field: 'description', initialWidth: 550 },
-    ];
+    this.columnDefs = [{ field: 'description', initialWidth: 550 },];
     this.apiservice.getAllRecords().subscribe((d:any) => {
-      console.log(d['data']);
       this.rowData = d['data'];
       this.isLoading = false;
     })
@@ -45,13 +41,11 @@ export class HomeComponent implements OnInit {
       rowDrag: true,
       resizable: true,
       cellRenderer: 'deleteBtnRenderer',
-      cellRendererParams: { clicked: this.onBtnClick.bind(this) },
+      cellRendererParams: { clicked: this.deleteRow.bind(this) },
       maxWidth: 110
     }
     this.columnDefs.unshift(deleteButton);
-    this.gridOptions.suppressNoRowsOverlay = false;
     this.gridOptions.suppressScrollOnNewData = true;
-    //this.gridOptions.domLayout = 'autoHeight';
   }
 
   onGridReady(params: any) {
@@ -63,19 +57,17 @@ export class HomeComponent implements OnInit {
     this.apiservice.upsertRecord(event.data).subscribe((d: any) => { this.isLoading = false; });
   }
 
-  //Delete Button
-  onBtnClick(params: any) {
+  deleteRow(params: any) {
     this.rowData = this.api.getRenderedNodes().map(x => x.data);
     this.isLoading = true;
     this.apiservice.deleteRecord(params.rowData['id']).subscribe(() => {
       this.rowData.splice(this.rowData.findIndex(i => i.id == params.rowData['id']), 1);
       this.api.setRowData(this.rowData);
-      console.log('this line reached');
       this.isLoading = false;
     });
   }
 
-  AddRow() {
+  addRow() {
     this.rowData = this.api.getRenderedNodes().map(x => x.data);
     this.rowData.unshift({ id: 0, description: '' });
     this.api.setRowData(this.rowData);
