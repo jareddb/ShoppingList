@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
     this.columnDefs = [{ field: 'description', initialWidth: 550 },];
     this.apiservice.getAllRecords().subscribe((d: any) => {
-      console.log(d['data']);
       this.rowData = d['data'];
       this.isLoading = false;
     })
@@ -50,12 +49,16 @@ export class HomeComponent implements OnInit {
 
   onGridReady(params: any) {
     this.api = params.api;
-    console.log(this.api.getColumnDefs());
   }
 
   onCellValueChanged(event: CellValueChangedEvent) {
     this.isLoading = true;
-    this.apiservice.upsertRecord(event.data).subscribe((d: any) => { this.isLoading = false; });
+    let index: number = Number(event.rowIndex);
+    this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    this.apiservice.upsertRecord(event.data).subscribe((d: any) => {
+      this.rowData[index] = d['data'];
+      this.isLoading = false;
+    });
   }
 
   deleteRow(params: any) {
@@ -63,7 +66,6 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
     this.apiservice.deleteRecord(params.rowData['id']).subscribe(() => {
       this.rowData.splice(this.rowData.findIndex(i => i.id == params.rowData['id']), 1);
-      this.api.setRowData(this.rowData);
       this.isLoading = false;
     });
   }
@@ -72,7 +74,6 @@ export class HomeComponent implements OnInit {
     try { this.rowData = this.api.getRenderedNodes().map(x => x.data);
     } catch { this.rowData = [] }
     this.rowData.unshift({ id: 0, description: '' });
-    this.api.setRowData(this.rowData);
   }
 
 }

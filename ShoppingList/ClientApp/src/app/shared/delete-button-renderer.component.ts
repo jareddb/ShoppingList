@@ -13,6 +13,7 @@ export class DeleteBtnRenderer implements ICellRendererAngularComp {
 
 
   refresh(params?: any): boolean {
+    this.params = params;
     return true;
   }
 

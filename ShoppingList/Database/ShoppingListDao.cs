@@ -33,7 +33,6 @@ namespace ShoppingList.Database {
             }
             _dbContext.SaveChanges();
             _logger.LogInformation($"Upserted {itemToUpdate.Id}:{itemToUpdate.Description} to database");
-
             return itemToUpdate;
         }
 
@@ -44,6 +43,7 @@ namespace ShoppingList.Database {
                 _logger.LogInformation($"Deleted {itemToDelete.Id}:{itemToDelete.Description} from database");
                 return _dbContext.SaveChanges();
             }
+            _logger.LogInformation($"Item not found in database by id {id}, no records deleted");
             return 0;
         }
 
