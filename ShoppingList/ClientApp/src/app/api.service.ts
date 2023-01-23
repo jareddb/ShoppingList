@@ -29,10 +29,4 @@ export class ApiService {
     return this.http.get(this.baseUrl + 'app/v1/GetAllRecords')
   }
 
-  public saveAllChanges() {
-    return this.http.get(this.baseUrl + 'app/v1/SaveChanges')
-  }
-
-
-
 }
