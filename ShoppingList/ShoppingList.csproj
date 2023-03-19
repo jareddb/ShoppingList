@@ -66,4 +66,12 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
+  
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Jared\source\repos\ShoppingList\ShoppingList\.editorconfig" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="C:\Users\Jared\source\repos\ShoppingList\ShoppingList\.editorconfig" />
+  </ItemGroup>
 </Project>
