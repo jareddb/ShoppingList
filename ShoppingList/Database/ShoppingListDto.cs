@@ -1,6 +1,3 @@
-﻿
-
-using System.Text.Json.Serialization;
 
 namespace ShoppingList.Database {
     public class ShoppingListItem {

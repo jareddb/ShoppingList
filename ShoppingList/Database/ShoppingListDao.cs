@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
 
 namespace ShoppingList.Database {
 
     public class ShoppingItemData {
 
         private readonly ILogger _logger;
-        private ShoppingListDbContext _dbContext;
+        private readonly ShoppingListDbContext _dbContext;
 
         public ShoppingItemData(ShoppingListDbContext dbContext, ILogger<ShoppingItemData> logger) { 
             _dbContext = dbContext;

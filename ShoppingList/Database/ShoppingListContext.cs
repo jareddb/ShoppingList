@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
     
 namespace ShoppingList.Database {
     public class ShoppingListDbContext : DbContext {
 
-        private IConfiguration config;
+        private readonly IConfiguration config;
 
         public ShoppingListDbContext(IConfiguration config) {
             this.config = config;
