@@ -1,11 +1,10 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { HomeComponent } from './home.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgGridModule } from 'ag-grid-angular';
+import { HomeComponent } from './home.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-
-describe('Home Component', () => { 
+describe('Home Component', () => {
   let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(() => {
@@ -27,7 +26,7 @@ describe('Home Component', () => {
   });
 
   it('Should add a new row when addRow() is called', () => {
-    let count = fixture.componentInstance.rowData.length;
+    const count = fixture.componentInstance.rowData.length;
     fixture.componentInstance.addRow();
     expect(fixture.componentInstance.rowData.length).toBeGreaterThan(count);
   });

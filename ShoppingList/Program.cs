@@ -10,7 +10,7 @@ internal class Program {
 
         builder.Services.AddDbContext<ShoppingListDbContext>();
         builder.Services.AddTransient<ShoppingItemData>();
-        builder.Services.AddTransient<AppController>();
+        builder.Services.AddTransient<ShoppingListController>();
 
         builder.Services.AddControllersWithViews();
         var app = builder.Build();

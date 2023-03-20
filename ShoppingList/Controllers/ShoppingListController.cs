@@ -4,11 +4,11 @@ using ShoppingList.Database;
 namespace ShoppingList.Controllers {
     [ApiController]
     [Route("[controller]/v1")]
-    public class AppController : ControllerBase {
+    public class ShoppingListController : ControllerBase {
 
         private readonly ShoppingItemData _shoppingItemData;
 
-        public AppController(ShoppingItemData shoppingItemData) {
+        public ShoppingListController(ShoppingItemData shoppingItemData) {
             _shoppingItemData = shoppingItemData;
         }
 

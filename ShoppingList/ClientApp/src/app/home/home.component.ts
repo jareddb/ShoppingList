@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+
+import { type CellValueChangedEvent, type ColDef, GridApi, type GridOptions } from 'ag-grid-community';
+import { Component, type OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
-import { ColDef, GridOptions, GridApi, CellValueChangedEvent, Logger } from 'ag-grid-community';
 import { DeleteBtnRenderer } from '../shared/delete-button-renderer.component';
-import { ShoppingListItem } from '../models/shopping-list-item';
+import type { BackendPayload, DeleteParams, GridParams, ShoppingListItem } from '../models/shopping-list-models';
 
 @Component({
   selector: 'app-home',
@@ -12,31 +12,29 @@ import { ShoppingListItem } from '../models/shopping-list-item';
 })
 
 export class HomeComponent implements OnInit {
-
   public gridOptions: GridOptions = {};
   public api: GridApi;
-  public frameworkComponents: any;
+  public frameworkComponents: unknown;
   public rowData: ShoppingListItem[] = [];
   public columnDefs: ColDef[] = [];
   public isLoading: boolean = true;
 
-  constructor(private apiservice: ApiService,
-  ) {
+  constructor (private readonly apiservice: ApiService) {
     this.frameworkComponents = { deleteBtnRenderer: DeleteBtnRenderer };
     this.api = new GridApi();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isLoading = true;
     this.columnDefs = [{ field: 'description', initialWidth: 550 },];
-    this.apiservice.getAllRecords().subscribe((d: any) => {
-      this.rowData = d['data'];
+    this.apiservice.getAllRecords().subscribe((d: BackendPayload) => {
+      this.rowData = d.data as Array<ShoppingListItem>;
       this.isLoading = false;
     })
     this.columnDefs.forEach((colDef, index) => { colDef.editable = true; })
-    let deleteButton = {
-      headerName: "",
-      field: "record",
+    const deleteButton = {
+      headerName: '',
+      field: 'record',
       rowDrag: true,
       resizable: true,
       cellRenderer: 'deleteBtnRenderer',
@@ -47,30 +45,30 @@ export class HomeComponent implements OnInit {
     this.gridOptions.suppressScrollOnNewData = true;
   }
 
-  onGridReady(params: any) {
-    this.api = params.api;
+  onGridReady(params: GridParams): void {
+    this.api = params.api as GridApi;
   }
 
-  onCellValueChanged(event: CellValueChangedEvent) {
+  onCellValueChanged (event: CellValueChangedEvent): void {
     this.isLoading = true;
-    let index: number = Number(event.rowIndex);
+    const index: number = Number(event.rowIndex);
     this.rowData = this.api.getRenderedNodes().map(x => x.data);
-    this.apiservice.upsertRecord(event.data).subscribe((d: any) => {
-      this.rowData[index] = d['data'];
+    this.apiservice.upsertRecord(event.data).subscribe((d: BackendPayload) => {
+      this.rowData[index] = d.data as ShoppingListItem;
       this.isLoading = false;
     });
   }
 
-  deleteRow(params: any) {
+  deleteRow(params: DeleteParams): void {
     this.rowData = this.api.getRenderedNodes().map(x => x.data);
     this.isLoading = true;
-    this.apiservice.deleteRecord(params.rowData['id']).subscribe(() => {
-      this.rowData.splice(this.rowData.findIndex(i => i.id == params.rowData['id']), 1);
+    this.apiservice.deleteRecord(params.rowData.id).subscribe(() => {
+      this.rowData.splice(this.rowData.findIndex(i => i.id === params.rowData.id), 1);
       this.isLoading = false;
     });
   }
 
-  addRow() {
+  addRow (): void {
     try { this.rowData = this.api.getRenderedNodes().map(x => x.data);
     } catch { this.rowData = [] }
     this.rowData.unshift({ id: 0, description: '' });

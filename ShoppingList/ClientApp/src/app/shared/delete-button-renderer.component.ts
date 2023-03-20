@@ -11,21 +11,20 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 export class DeleteBtnRenderer implements ICellRendererAngularComp {
   private params: any;
 
-
-  refresh(params?: any): boolean {
+  refresh(params?: unknown): boolean {
     this.params = params;
     return true;
   }
 
-  agInit(params: any): void {
+  agInit(params: unknown): void {
     this.params = params;
   }
 
-  btnClickedHandler() {
+  btnClickedHandler (): void {
     this.params.clicked(this.params.value);
   }
 
-  onClick($event: any) {
+  onClick ($event: unknown): void {
     if (this.params.clicked instanceof Function) {
       const params = {
         event: $event,
