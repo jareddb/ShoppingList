@@ -1,4 +1,3 @@
-
 import { type CellValueChangedEvent, type ColDef, GridApi, type GridOptions } from 'ag-grid-community';
 import { Component, type OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
@@ -28,7 +27,7 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
     this.columnDefs = [{ field: 'description', initialWidth: 550 },];
     this.apiservice.getAllRecords().subscribe((d: BackendPayload) => {
-      this.rowData = d.data as Array<ShoppingListItem>;
+      this.rowData = d.data as ShoppingListItem[];
       this.isLoading = false;
     })
     this.columnDefs.forEach((colDef, index) => { colDef.editable = true; })
@@ -52,7 +51,7 @@ export class HomeComponent implements OnInit {
   onCellValueChanged (event: CellValueChangedEvent): void {
     this.isLoading = true;
     const index: number = Number(event.rowIndex);
-    this.rowData = this.api.getRenderedNodes().map(x => x.data);
+    this.rowData = this.api.getRenderedNodes().map(x => x.data) as ShoppingListItem[];
     this.apiservice.upsertRecord(event.data).subscribe((d: BackendPayload) => {
       this.rowData[index] = d.data as ShoppingListItem;
       this.isLoading = false;

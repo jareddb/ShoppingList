@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { BackendPayload, ShoppingListItem } from './models/shopping-list-models';
-import { Observable } from 'rxjs';
+import { ShoppingListItem } from './models/shopping-list-models';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 
 <div *ngIf="!this.isLoading" id="grid-container">
   <button type="button" class="btn btn-outline-primary btn-sm" id="add-row-button" (click)="addRow()"><b>+</b></button>
-  <ag-grid-angular class="ag-theme-alpine" style="height: calc(100vh - 125px);"
+  <ag-grid-angular class="ag-theme-alpine" id="agGrid"
                    [columnDefs]=this.columnDefs
                    [rowData]=this.rowData
                    [rowDragManaged]="true"
